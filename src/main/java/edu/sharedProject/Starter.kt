@@ -1,31 +1,54 @@
 package edu.sharedProject
 
-fun main(args: Array<String>) {
-    println("Enter the color, you want the spare part of your car to be painted in. The list of available colors:")
-    Color.entries.forEach {
-        println("    ${it.ruTerm}")
-    }
-    println("Place to enter:")
+import java.lang.Thread.sleep
+
+fun main()
+{
+    println("Hello, this is the paint shop!")
+
+    sleep(500)
+
+    val color : Color = setColor()
+    println()
+    val sparePart : SparePart = setSparePart()
+
+    val cost = Starter.calculateCost(color, sparePart)
+
+    println("\nTotal cost: $cost")
+
+}
+
+fun setColor() : Color
+{
+    lateinit var color : Color
+
+    println("Pick the color. The list of the available colors:")
+    Color.entries.forEach { println("    ${it.ruTerm}") }
+    print("Place to enter: ")
 
     val colorInput = readln()
-
-    var color : Color? = null
-    var sparePart : SparePart? = null
 
     runCatching<Color>() {
         Color.entries.find { it.ruTerm == colorInput }
             ?: throw IllegalStateException()
     }
         .onFailure {
-            println("К сожалению, введённый вами цвет `${colorInput}` является недействительным. Попробуйте ещё раз.")
+            println("Picked color `${colorInput}` is not present.")
         }
         .onSuccess { chosenColor ->
             color = chosenColor
         }
+    return color
+}
 
-    println("Enter the spare part of car, that you want to paint.")
-    SparePart.entries.forEach { print(it.toString() + " in ru term: " + it.ruTerm + "\n") }
-    println("Place to enter:")
+
+fun setSparePart() : SparePart
+{
+    lateinit var sparePart: SparePart
+
+    println("Pick the spare part of car.")
+    SparePart.entries.forEach { println("    ${it.ruTerm}") }
+    print("Place to enter: ")
 
     val sparePartInput = readln()
     runCatching<SparePart>() {
@@ -33,19 +56,12 @@ fun main(args: Array<String>) {
             ?: throw IllegalStateException()
     }
         .onFailure {
-            println("К сожалению, введённая вами деталь `${colorInput}` является недопустимым вариантом. Попробуйте ещё раз.")
+            println("Picked spare part `${sparePartInput}` is not present.")
         }
         .onSuccess { chosenSparePart ->
             sparePart = chosenSparePart
         }
-    if(color != null && sparePart != null)
-    {
-        val cost = Starter.calculateCost(color!!, sparePart!!)
-        println("Total cost: $cost")
-    }
-    else
-        println("Reenter parameters")
-
+    return  sparePart
 }
 
 class Starter {
