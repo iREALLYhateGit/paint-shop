@@ -15,53 +15,48 @@ fun main()
     val cost = Starter.calculateCost(color, sparePart)
 
     println("\nTotal cost: $cost")
-
 }
 
 fun setColor() : Color
 {
-    lateinit var color : Color
-
     println("Pick the color. The list of the available colors:")
     Color.entries.forEach { println("    ${it.ruTerm}") }
+    return defColor()
+}
+
+fun defColor() : Color
+{
     print("Place to enter: ")
-
     val colorInput = readln()
-
-    runCatching<Color>() {
+    return runCatching<Color>() {
         Color.entries.find { it.ruTerm == colorInput }
             ?: throw IllegalStateException()
+    }.getOrElse {
+        println("Picked color `${colorInput}` is not present.")
+        return defColor()
     }
-        .onFailure {
-            println("Picked color `${colorInput}` is not present.")
-        }
-        .onSuccess { chosenColor ->
-            color = chosenColor
-        }
-    return color
 }
 
 
 fun setSparePart() : SparePart
 {
-    lateinit var sparePart: SparePart
-
     println("Pick the spare part of car.")
     SparePart.entries.forEach { println("    ${it.ruTerm}") }
-    print("Place to enter: ")
 
+    return defSparePart()
+}
+
+fun defSparePart() : SparePart
+{
+    print("Place to enter: ")
     val sparePartInput = readln()
-    runCatching<SparePart>() {
+    return runCatching<SparePart>() {
         SparePart.entries.find { it.ruTerm == sparePartInput }
             ?: throw IllegalStateException()
+    }.getOrElse {
+        println("Picked spare part `${sparePartInput}` is not present.")
+        return defSparePart()
     }
-        .onFailure {
-            println("Picked spare part `${sparePartInput}` is not present.")
-        }
-        .onSuccess { chosenSparePart ->
-            sparePart = chosenSparePart
-        }
-    return  sparePart
 }
 
 class Starter {
