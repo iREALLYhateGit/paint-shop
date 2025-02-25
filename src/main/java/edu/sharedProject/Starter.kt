@@ -4,7 +4,7 @@ import java.lang.Thread.sleep
 
 fun main()
 {
-    println("Hello, this is the paint shop!")
+    println("Hello, this is the paint shop!\n")
 
     sleep(500)
 
